@@ -13,7 +13,9 @@
  * @version		$Id$
  */
 
-if (!defined("ICMS_ROOT_PATH")) die("ICMS root path not defined");
+if (!defined("ICMS_ROOT_PATH")) {
+    die("ICMS root path not defined");
+}
 
 /**
  * Prepare recent publications block for display
@@ -27,11 +29,11 @@ function show_recent_publications($options)
 	
 	// Check for dynamic tag filtering
 	if ($options[2] == 1 && isset($_GET['tag_id'])) {
-		$untagged_content = ($_GET['tag_id'] == 'untagged') ? TRUE : FALSE;
+		$untagged_content = $_GET['tag_id'] == 'untagged';
 		$options[1] = (int)trim($_GET['tag_id']);
 	}
 	
-	$publicationObjects = array();
+	$publicationObjects = [];
 	$libraryModule = icms::handler("icms_module")->getByDirname('library');
 	$sprocketsModule = icms::handler("icms_module")->getByDirname("sprockets");
 		
@@ -43,8 +45,8 @@ function show_recent_publications($options)
 		icms_loadLanguageFile("sprockets", "common");
 		$sprockets_taglink_handler = icms_getModuleHandler('taglink', $sprocketsModule->getVar('dirname'), 'sprockets');
 	}
-	
-	$publicationList = $publications = array();
+    $publicationList = [];
+    $publications = [];
 	$criteria = new icms_db_criteria_Compo();
 	
 	// Sanitise the options as a precaution, since they are used in a manual query string
@@ -60,6 +62,7 @@ function show_recent_publications($options)
 		if ($untagged_content) {
 			$clean_tag_id = 0;
 		}
+        
 		$query .= " AND `tid` = '" . $clean_tag_id . "'"
 			. " AND `mid` = '" . $libraryModule->getVar('mid') . "'"
 			. " AND `item` = 'publication'"
@@ -95,10 +98,10 @@ function show_recent_publications($options)
 	}
 
 	// Prepare publication for display
-	$publication_list = array();
-	foreach ($publicationObjects as $key => $object)
+	$publication_list = [];
+	foreach ($publicationObjects as $object)
 	{
-		$publication = array();
+		$publication = [];
 		$publication['title'] = $object->getVar('title');
 		$publication['submission_time'] = $object->getVar('submission_time');
 		
@@ -108,6 +111,7 @@ function show_recent_publications($options)
 		{
 			$publication['itemUrl'] = $object->getItemLink(TRUE) . "&amp;title=" . $short_url;
 		}
+        
 		$publication_list[] = $publication;
 	}
 	
@@ -115,7 +119,7 @@ function show_recent_publications($options)
 	if (!empty($publication_list)) {
 		$block['library_recent_publications'] = $publication_list;
 	} else {
-		$block = array();
+		$block = [];
 	}	
 
 	return $block;
@@ -148,13 +152,14 @@ function edit_recent_publications($options)
 		
 		// Get only those tags that contain content from this module
 		$criteria = '';
-		$relevant_tag_ids = array();
-		$criteria = icms_buildCriteria(array('mid' => $libraryModule->getVar('mid')));
+		$relevant_tag_ids = [];
+		$criteria = icms_buildCriteria(['mid' => $libraryModule->getVar('mid')]);
 		$library_module_taglinks = $sprockets_taglink_handler->getObjects($criteria, TRUE, TRUE);
-		foreach ($library_module_taglinks as $key => $value)
+		foreach ($library_module_taglinks as $value)
 		{
 			$relevant_tag_ids[] = $value->getVar('tid');
 		}
+        
 		$relevant_tag_ids = array_unique($relevant_tag_ids);
 		$relevant_tag_ids = '(' . implode(',', $relevant_tag_ids) . ')';
 		unset($criteria);
@@ -164,7 +169,7 @@ function edit_recent_publications($options)
 		$criteria->add(new icms_db_criteria_Item('label_type', '0'));
 		$tagList = $sprockets_tag_handler->getList($criteria);
 
-		$tagList = array(0 => _MB_LIBRARY_RECENT_ALL) + $tagList;
+		$tagList = [0 => _MB_LIBRARY_RECENT_ALL] + $tagList;
 		$form .= '<tr><td>' . _MB_LIBRARY_RECENT_TAG . '</td>';
 		// Parameters icms_form_elements_Select: ($caption, $name, $value = null, $size = 1, $multiple = TRUE)
 		$form_select = new icms_form_elements_Select('', 'options[1]', $options[1], '1', FALSE);
@@ -176,15 +181,15 @@ function edit_recent_publications($options)
 		if ($options[2] == 1) {
 			$form .= ' checked="checked"';
 		}
+        
 		$form .= '/>' . _MB_LIBRARY_PUBLICATION_YES;
 		$form .= '<input type="radio" name="options[2]" value="0"';
 		if ($options[2] == 0) {
 			$form .= 'checked="checked"';
 		}
+        
 		$form .= '/>' . _MB_LIBRARY_PUBLICATION_NO . '</td></tr>';
 	}
 	
-	$form .= '</table>';
-	
-	return $form;
+	return $form . '</table>';
 }

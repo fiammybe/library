@@ -13,7 +13,7 @@
  */
 
 function library_com_update($item_id, $total_num) {
-    $library_publication_handler = icms_getModuleHandler("publication", basename(dirname(dirname(__FILE__))), "library");
+    $library_publication_handler = icms_getModuleHandler("publication", basename(dirname(__FILE__, 2)), "library");
     $library_publication_handler->updateComments($item_id, $total_num);
 }
 

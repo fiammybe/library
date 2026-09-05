@@ -25,7 +25,7 @@ function edittag($tag_id = 0)
 	$tagObj = $sprockets_tag_handler->get($tag_id);
 	
 	if (isset($_POST['op']) && $_POST['op'] == 'changedField' && in_array($_POST['changedField'],
-		array('parent_id'))) {
+		['parent_id'])) {
 		
 		// Disallow setting own ID as parent
 		if ($_POST['parent_id'] == $tagObj->getVar('tag_id')) {
@@ -44,13 +44,15 @@ function edittag($tag_id = 0)
 		// Include the Angry Tree!!!
 		include_once ICMS_ROOT_PATH . '/modules/' . $sprocketsModule->getVar('dirname')
 				. '/include/angry_tree.php';
-
-		$tag_id = $categoryTree = '';
-		$categoryObjArray = $allChildCategories = $newParentCategory = array();
+        $tag_id = '';
+        $categoryTree = '';
+        $categoryObjArray = [];
+        $allChildCategories = [];
+        $newParentCategory = [];
 		$criteria = new icms_db_criteria_Compo();
 
 		// Only work on categories (exclude tags)
-		$criteria = icms_buildCriteria(array('label_type' => '1'));
+		$criteria = icms_buildCriteria(['label_type' => '1']);
 		$categoryObjArray = $sprockets_tag_handler->getObjects($criteria);
 
 		// Get a category tree
@@ -112,6 +114,7 @@ function edittag($tag_id = 0)
 		$sform->assign($icmsAdminTpl);
 
 	}
+    
 	$icmsAdminTpl->display('db:sprockets_admin_tag.html');
 }
 
@@ -124,10 +127,14 @@ if (icms_get_module_status("sprockets"))
 	$clean_op = '';
 
 	/** Create a whitelist of valid values */
-	$valid_op = array ('mod','changedField','addtag', 'toggleStatus', 'del', '');
+	$valid_op =  ['mod','changedField','addtag', 'toggleStatus', 'del', ''];
+    if (isset($_GET['op'])) {
+        $clean_op = htmlentities($_GET['op']);
+    }
 
-	if (isset($_GET['op'])) $clean_op = htmlentities($_GET['op']);
-	if (isset($_POST['op'])) $clean_op = htmlentities($_POST['op']);
+    if (isset($_POST['op'])) {
+        $clean_op = htmlentities($_POST['op']);
+    }
 
 	// Sanitise the tag_id
 	$clean_tag_id = isset($_GET['tag_id']) ? (int) $_GET['tag_id'] : 0 ;
@@ -156,7 +163,7 @@ if (icms_get_module_status("sprockets"))
 		case "toggleStatus":
 
 				$status = $sprockets_tag_handler->toggleStatus($clean_tag_id, 'rss');
-				$ret = '/modules/' . basename(dirname(dirname(__FILE__))) . '/admin/category.php';
+				$ret = '/modules/' . basename(dirname(__FILE__, 2)) . '/admin/category.php';
 				if ($status == 0) {
 					redirect_header(ICMS_URL . $ret, 2, _AM_SPROCKETS_TAG_RSS_DISABLED);
 				} else {
@@ -174,6 +181,7 @@ if (icms_get_module_status("sprockets"))
 			} else {
 				$warning = '';
 			}
+            
 			$controller->handleObjectDeletion($warning);
 
 			break;
@@ -197,14 +205,14 @@ if (icms_get_module_status("sprockets"))
 					. '/include/angry_tree_table.php';
 				
 			// Restrict content to MODULE-SPECFIC CATEGORIES only (no tags)
-			$criteria = icms_buildCriteria(array('mid' => icms::$module->getVar('mid'), 'label_type' => '1'));
-			$objectTable = new icms_ipf_view_Tree($sprockets_tag_handler, $criteria, $actions = array());
+			$criteria = icms_buildCriteria(['mid' => icms::$module->getVar('mid'), 'label_type' => '1']);
+			$objectTable = new icms_ipf_view_Tree($sprockets_tag_handler, $criteria, $actions = []);
 			$objectTable->addCustomAction('edit_category_action');
 			$objectTable->addCustomAction('delete_category_action');
 			$objectTable->addColumn(new icms_ipf_view_Column('title', 'left', FALSE,
-					'category_admin_titles', basename(dirname(dirname(__FILE__)))));
+					'category_admin_titles', basename(dirname(__FILE__, 2))));
 			$objectTable->addcolumn(new icms_ipf_view_Column('rss', 'left', FALSE, 
-					'category_admin_rss', basename(dirname(dirname(__FILE__))),
+					'category_admin_rss', basename(dirname(__FILE__, 2)),
 					_AM_SPROCKETS_TAG_RSS_FEED));
 			$objectTable->addQuickSearch('title');
 			$objectTable->addIntroButton('addtag', 'category.php?op=mod', _AM_SPROCKETS_CATEGORY_MODULE_CREATE);

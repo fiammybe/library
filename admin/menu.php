@@ -12,42 +12,42 @@
 
 global $icmsConfig;
 
-$adminmenu[] = array(
+$adminmenu[] = [
 	"title" => _MI_LIBRARY_PUBLICATIONS,
-	"link" => "admin/publication.php");
+	"link" => "admin/publication.php"];
 
 // Check if Sprockets module is available, otherwise categories page is not available
 if (icms_get_module_status("sprockets")) {
-	$adminmenu[] = array(
+	$adminmenu[] = [
 	"title" => _MI_LIBRARY_CATEGORIES,
-	"link" => "admin/category.php");
+	"link" => "admin/category.php"];
 }
 
-$module = icms::handler("icms_module")->getByDirname(basename(dirname(dirname(__FILE__))));
+$module = icms::handler("icms_module")->getByDirname(basename(dirname(__FILE__, 2)));
 
-$headermenu[] = array(
+$headermenu[] = [
 	"title" => _CO_ICMS_GOTOMODULE,
-	"link" => ICMS_URL . "/modules/" . $module->getVar("dirname") . "/");
+	"link" => ICMS_URL . "/modules/" . $module->getVar("dirname") . "/"];
 
-$headermenu[] = array(
+$headermenu[] = [
 	"title" => _PREFERENCES,
-	"link" => "../../system/admin.php?fct=preferences&amp;op=showmod&amp;mod=" . $module->getVar("mid"));
+	"link" => "../../system/admin.php?fct=preferences&amp;op=showmod&amp;mod=" . $module->getVar("mid")];
 
-$headermenu[] = array(
+$headermenu[] = [
 	"title" => _MI_LIBRARY_TEMPLATES,
 	"link" => '../../system/admin.php?fct=tplsets&op=listtpl&tplset=' 
-		. $icmsConfig['template_set'] . '&moddir=' . $module->getVar("dirname"));
+		. $icmsConfig['template_set'] . '&moddir=' . $module->getVar("dirname")];
 
-$headermenu[] = array(
+$headermenu[] = [
 	"title" => _CO_ICMS_UPDATE_MODULE,
-	"link" => ICMS_URL . "/modules/system/admin.php?fct=modulesadmin&amp;op=update&amp;module=" . basename(dirname(dirname(__FILE__))));
+	"link" => ICMS_URL . "/modules/system/admin.php?fct=modulesadmin&amp;op=update&amp;module=" . basename(dirname(__FILE__, 2))];
 
-$headermenu[] = array(
+$headermenu[] = [
 	"title" => _MODABOUT_ABOUT,
-	"link" => ICMS_URL . "/modules/" . $module->getVar("dirname") . "/admin/about.php");
+	"link" => ICMS_URL . "/modules/" . $module->getVar("dirname") . "/admin/about.php"];
 
-$headermenu[] = array(
+$headermenu[] = [
 	"title" => _MI_LIBRARY_MANUAL,
-	"link" => ICMS_URL . "/modules/" . $module->getVar("dirname") . "/docs/library_manual.pdf");
+	"link" => ICMS_URL . "/modules/" . $module->getVar("dirname") . "/docs/library_manual.pdf"];
 
 unset($module_handler);

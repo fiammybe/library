@@ -21,7 +21,7 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 	public function __construct(&$handler)
 	{
 		icms_ipf_object::__construct($handler);
-		$libraryModule = icms::handler("icms_module")->getByDirname('library');
+		icms::handler("icms_module")->getByDirname('library');
 
 		$this->quickInitVar("publication_id", XOBJ_DTYPE_INT, TRUE);
 		$this->quickInitVar("type", XOBJ_DTYPE_TXTBOX, TRUE);
@@ -61,33 +61,33 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 		$this->setControl('description', 'dhtmltextarea');
 		$this->setControl('extended_text', 'dhtmltextarea');
 
-		$this->setControl('type', array(
+		$this->setControl('type', [
 			'name' => 'select',
 			'itemHandler' => 'publication',
 			'method' => 'getTypeOptions',
 			'module' => 'library',
-			'onSelect' => 'submit'));
+			'onSelect' => 'submit']);
 		
 		// Only display the tag / category / rights fields if the sprockets module is installed
-		$sprocketsModule = icms_getModuleInfo('sprockets');
+		icms_getModuleInfo('sprockets');
 		if (icms_get_module_status("sprockets"))
 		{
-			$this->setControl('tag', array(
+			$this->setControl('tag', [
 			'name' => 'selectmulti',
 			'itemHandler' => 'tag',
 			'method' => 'getTags',
-			'module' => 'sprockets'));
+			'module' => 'sprockets']);
 			
-			$this->setControl('category', array(
+			$this->setControl('category', [
 			'name' => 'selectmulti',
 			'itemHandler' => 'tag',
 			'method' => 'getCategoryOptions',
-			'module' => 'sprockets'));
+			'module' => 'sprockets']);
 			
-			$this->setControl('rights', array(
+			$this->setControl('rights', [
 			'itemHandler' => 'rights',
 			'method' => 'getRights',
-			'module' => 'sprockets'));
+			'module' => 'sprockets']);
 		}
 		else 
 		{
@@ -100,30 +100,30 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 			$this->setFieldAsRequired('rights', FALSE);
 		}		
 		
-		$this->setControl('format', array(
+		$this->setControl('format', [
 			'name' => 'select',
 			'itemHandler' => 'publication',
 			'method' => 'getFormatOptions',
-			'module' => 'library'));
+			'module' => 'library']);
 		
 		$this->setControl("image", "imageupload");
 		
 		// Set uploads directory for images
-		$this->setControl('image', array('name' => 'image'));
-		$url = ICMS_URL . '/uploads/' . basename(dirname(dirname(__FILE__))) . '/';
-		$path = ICMS_ROOT_PATH . '/uploads/' . basename(dirname(dirname(__FILE__))) . '/';
+		$this->setControl('image', ['name' => 'image']);
+		$url = ICMS_URL . '/uploads/' . basename(dirname(__FILE__, 2)) . '/';
+		$path = ICMS_ROOT_PATH . '/uploads/' . basename(dirname(__FILE__, 2)) . '/';
 		$this->setImageDir($url, $path);
 		
-		$this->setControl('source', array(
+		$this->setControl('source', [
 			'itemHandler' => 'publication',
 			'method' => 'getSourceList',
-			'module' => 'library'));
+			'module' => 'library']);
 		
-		$this->setControl('language', array(
+		$this->setControl('language', [
 			'name' => 'select',
 			'itemHandler' => 'publication',
 			'method' => 'getLanguageOptions',
-			'module' => 'library'));
+			'module' => 'library']);
 		
 		$this->setControl('submitter', 'user');
 		$this->setControl('compact_view', 'yesno');
@@ -154,7 +154,7 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 	 * @return mixed value of the field that is requested
 	 */
 	public function getVar($key, $format = "s") {
-		if ($format == "s" && in_array($key, array(
+		if ($format == "s" && in_array($key, [
 			'creator',
 			'date',
 			'file_size',
@@ -167,9 +167,10 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 			'submitter',
 			'submission_time',
 			'format',
-			'oai_identifier'))) {
-			return call_user_func(array ($this,	$key));
+			'oai_identifier'])) {
+			return call_user_func( [$this,	$key]);
 		}
+        
 		return parent::getVar($key, $format);
 	}
 	
@@ -181,6 +182,7 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 		if ($creator) {
 			$creator = str_replace("|", ", ",  $creator);
 		}
+        
 		return $creator;
 	}
 	
@@ -193,6 +195,7 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 		if ($date) {
 			$date = date(icms_getConfig('date_format', 'library'), $date);
 		}
+        
 		return $date;
 	}
 	
@@ -202,18 +205,12 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 
 	public function federated() {
 		$button = '';
-		$type = $this->getVar('type', 'e');
+		$this->getVar('type', 'e');
 		$federated = $this->getVar('federated', 'e');
-
-		if ($type == 'Collection') {
-			$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(dirname(__FILE__)))
+        $button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(__FILE__, 2))
 				. '/admin/publication.php?publication_id=' . $this->getVar('publication_id')
 				. '&amp;op=changeFederated">';
-		} else {
-			$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(dirname(__FILE__)))
-				. '/admin/publication.php?publication_id=' . $this->getVar('publication_id')
-				. '&amp;op=changeFederated">';
-		}
+        
 		if ($federated == FALSE) {
 			$button .= '<img src="' . ICMS_IMAGES_SET_URL . '/actions/button_cancel.png" alt="' 
 				. _CO_LIBRARY_PUBLICATION_OFFLINE . '" title="'
@@ -223,6 +220,7 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 				. _CO_LIBRARY_PUBLICATION_ONLINE . '" title="' 
 				. _CO_LIBRARY_PUBLICATION_FEDERATED . '" /></a>';
 		}
+        
 		return $button;
 	}
 	
@@ -230,8 +228,9 @@ class mod_library_Publication extends icms_ipf_seo_Object {
      * Utility to convert bytes to a more readable form (KB, MB etc)
 	*/
 	public function file_size() {
-		$unit = $value = $output = '';
-		$bytes = $this->getVar('file_size', 'e');
+		$unit = '';
+        $value = '';
+        $bytes = $this->getVar('file_size', 'e');
 
 		if ($bytes == 0 || $bytes < 1024) {
 			$unit = ' bytes';
@@ -246,10 +245,10 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 			$unit = ' GB';
 			$value = ($bytes / 1073741824);
 		}
+        
 		$value = round($value, 2);
-		$output = $value . ' ' . $unit;
 
-		return $output;
+		return $value . ' ' . $unit;
 	}
 	
 	/*
@@ -259,8 +258,7 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 		if ($this->getVar('format', 'e') !== 0) {
 		$system_mimetype_handler = icms_getModuleHandler('mimetype', 'system');
 		$mimetypeObj = $system_mimetype_handler->get($this->getVar('format', 'e'));
-		$mimetype = $mimetypeObj->getVar('extension');
-		return $mimetype;
+		return $mimetypeObj->getVar('extension');
 		} else {
 			return FALSE;
 		}
@@ -270,14 +268,13 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 	 * Generates a html snippet for visualising the image
 	 */
 	public function image() {
-		$image = $image_for_display = '';
-		
 		$image = $this->getVar('image', 'e');
 		if ($image) {
 			$image_for_display = '<img src="' . $this->getImageDir() . $image 
 					. '" alt="' . $this->getVar('title') 
 					. '" title="' . $this->getVar('title') . '" />';
 		}
+        
 		return $image_for_display;
 	}
 	
@@ -303,8 +300,7 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 			$sprockets_rights_handler = icms_getModuleHandler('rights',
 				$sprocketsModule->getVar('dirname'), 'sprockets');
 			$rights_object = $sprockets_rights_handler->get($rights_id);
-			$rights = $rights_object->getItemLink();
-			return $rights;
+			return $rights_object->getItemLink();
 		} else {
 			return FALSE;
 		}
@@ -315,10 +311,9 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 	 */
 	public function oai_identifier() {
 		$oai_identifier = $this->getVar('oai_identifier', 'e');
-		$permalink = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(dirname(__FILE__))) 
+		return '<a href="' . ICMS_URL . '/modules/' . basename(dirname(__FILE__, 2)) 
 				. '/permalink.php?id=' . $oai_identifier . '">' 
 				. _CO_LIBRARY_PUBLICATION_PERMALINK . '</a>';
-		return $permalink;
 	}
 	
 	/*
@@ -330,13 +325,14 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 		if (!empty($source))
 		{
 			$library_publication_handler = icms_getModuleHandler('publication',
-				basename(dirname(dirname(__FILE__))), 'library');
+				basename(dirname(__FILE__, 2)), 'library');
 			$publicationObj = $library_publication_handler->get($source);
 			if ($publicationObj)
 			{
 				return $publicationObj->getItemLink();
 			}
 		}
+        
 		return FALSE;
 	}
 	
@@ -345,18 +341,12 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 	*/
 	public function online_status() {
 		$button = '';
-		$type = $this->getVar('type', 'e');
+		$this->getVar('type', 'e');
 		$status = $this->getVar('online_status', 'e');
-
-		if ($type == 'Collection') {
-			$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(dirname(__FILE__)))
+        $button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(__FILE__, 2))
 				. '/admin/publication.php?publication_id=' . $this->getVar('publication_id')
 				. '&amp;op=changeStatus">';
-		} else {
-			$button = '<a href="' . ICMS_URL . '/modules/' . basename(dirname(dirname(__FILE__)))
-				. '/admin/publication.php?publication_id=' . $this->getVar('publication_id')
-				. '&amp;op=changeStatus">';
-		}
+        
 		if ($status == '1') {
 			$button .= '<img src="' . ICMS_IMAGES_SET_URL . '/actions/button_ok.png" alt="' 
 				. _CO_LIBRARY_PUBLICATION_ONLINE . '" title="'
@@ -366,6 +356,7 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 				. _CO_LIBRARY_PUBLICATION_ONLINE . '" title="'
 				. _CO_LIBRARY_PUBLICATION_ONLINE . '" /></a>';
 		}
+        
 		return $button;
 	}
 	
@@ -392,7 +383,7 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 	 */
 	public function loadTags() {
 		
-		$ret = array();
+		$ret = [];
 		
 		// Retrieve the tags for this object
 		$sprocketsModule = icms_getModuleInfo('sprockets');
@@ -411,7 +402,7 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 	 */
 	public function loadCategories() {
 		
-		$ret = array();
+		$ret = [];
 		
 		// Retrieve the categories for this object
 		$sprocketsModule = icms_getModuleInfo('sprockets');
@@ -508,10 +499,10 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 	 * of objects (for example, on an index page).
 	 */
 	public function toArrayWithoutOverrides() {
-		$ret = $vars = $blacklisted_vars = array();
-		
-		// These are the properties that we don't want converted, because each one costs a query
-		$blacklisted_vars = array('rights', 'format');
+		$ret = [];
+        $vars = [];
+        // These are the properties that we don't want converted, because each one costs a query
+		$blacklisted_vars = ['rights', 'format'];
 		
 		$vars = $this->getVars();
 		foreach ($vars as $key=>$var) {
@@ -523,6 +514,7 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 				$ret[$key] = $value;
 			}
 		}
+        
 		if ($this->handler->identifierName != "") {
 			$controller = new icms_ipf_Controller($this->handler);
 			/**
@@ -540,13 +532,13 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 	
 	public function initiateStreaming()
 	{
-		$identifier = '';
 		$identifier = $this->getVar('identifier');
 		if (!empty ($identifier)) {
 			// Update counter
 			if (!icms_userIsAdmin(icms::$module->getVar('dirname'))) {
 				$this->handler->updateCounter($publicationObj);
 			}
+            
 			// Send playlist headers to the browser, followed by the audio file URL as contents (iso-8859-1 charset is standard for m3u)
 			header('Content-Type: audio/x-mpegurl audio/mpeg-url application/x-winamp-playlist audio/scpls audio/x-scpls; charset=iso-8859-1');
 			header("Content-Disposition:inline;filename=stream_soundtrack.m3u");
@@ -581,10 +573,9 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 	 * View publication within admin page
 	 */
 	public function getAdminViewItemLink() {
-		$ret = '<a href="' . LIBRARY_ADMIN_URL . 'publication.php?op=view&amp;publication_id=' 
+		return '<a href="' . LIBRARY_ADMIN_URL . 'publication.php?op=view&amp;publication_id=' 
 			. $this->getVar('publication_id', 'e') . '" title="' . _CO_LIBRARY_PUBLICATION_VIEW 
 			. '">' . $this->getVar('title') . '</a>';
-		return $ret;
 	}
 	
 	/*
@@ -594,13 +585,13 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 		
 		global $icmsConfig;
 		
-		$item_id = $this->id();
-		$source_id = $this->getVar('source', 'e');
+		$this->id();
+		$this->getVar('source', 'e');
 		$libraryModule = icms::handler("icms_module")->getByDirname('library');
 		$module_id = $libraryModule->getVar('mid');
 		$notification_handler = icms::handler('icms_data_notification');
 
-		$tags = array();
+		$tags = [];
 		$tags['ITEM_TITLE'] = $this->getVar('title', 'e');
 		$tags['ITEM_URL'] = $this->getItemLink(FALSE); // Get a title *with* link
 		$tags['PUBLICATION_NAME'] = $this->getVar('source', 's');
@@ -609,6 +600,6 @@ class mod_library_Publication extends icms_ipf_seo_Object {
 
 		// Global notification
 		// $category, $item_id, $events, $extra_tags=array(), $user_list=array(), $module_id=null, $omit_user_id=null
-		$notification_handler->triggerEvent('global', 0, 'publication_published', $tags, array(), $module_id, 0);
+		$notification_handler->triggerEvent('global', 0, 'publication_published', $tags, [], $module_id, 0);
 	}
 }

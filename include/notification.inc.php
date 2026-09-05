@@ -33,11 +33,11 @@ function library_notify_iteminfo($category, $item_id){
 	if ($category == 'publication') {
 
 		$library_publication_handler = icms_getModuleHandler('publication',
-			basename(dirname(dirname(__FILE__))), 'library');
+			basename(dirname(__FILE__, 2)), 'library');
 		$publicationObj = $library_publication_handler->get($item_id);
 		if ($publicationObj) {
 			$item['name'] = $publicationObj->title();
-			$item['url'] = ICMS_URL . '/modules/' . basename(dirname(dirname(__FILE__)))
+			$item['url'] = ICMS_URL . '/modules/' . basename(dirname(__FILE__, 2))
 				. '/publication.php?publication_id=' . intval($item_id);
 			return $item;
 		} else {

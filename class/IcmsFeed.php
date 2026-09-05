@@ -18,27 +18,43 @@ if (!defined('ICMS_ROOT_PATH')) {
 class IcmsFeed {
 
 	public $title;
+    
 	public $url;
+    
 	public $description;
+    
 	public $language;
+    
 	public $charset;
+    
 	public $category;
+    
 	public $pubDate;
+    
 	public $webMaster;
+    
 	public $generator;
+    
 	public $copyright;
+    
 	public $lastbuild;
+    
 	public $channelEditor;
+    
 	public $width;
+    
 	public $height;
+    
 	public $ttl;
-	public $image = array ();
+    
+	public $image =  [];
+    
 	public $atom_link;
 
 	/**
 	 * Constructor
 	 */
-	public function IcmsFeed () {
+	public function __construct () {
 		global $icmsConfig;
 		$this->title = $icmsConfig['sitename'];
 		$this->url = ICMS_URL;
@@ -57,16 +73,19 @@ class IcmsFeed {
 				$timezone = '0' . $timezone;
 			}
 		}
+        
 		// remove the decimal point if present and add either two trailing zeros or 30
 		if (strpos($timezone, '.5')) {
 			$timezone = str_replace('.5', '30', $timezone);
 		} else {
 			$timezone = $timezone . '00';
 		}
+        
 		// add a + sign if the time zone offset is positive
 		if ($timezone >= 0) {
 			$timezone = '+' . $timezone;
 		}
+        
 		$this->lastbuild = formatTimestamp(time(), 'D, d M Y H:i:s') . ' ' . $timezone;
 
 		$this->webMaster = $icmsConfig['adminmail'];
@@ -77,11 +96,11 @@ class IcmsFeed {
 		$this->width = 200;
 		$this->height = 50;
 		$this->ttl = 60;
-		$this->image = array(
+		$this->image = [
 			'title' => $this->title,
 			'url' => ICMS_URL.'/images/logo.gif',
-		);
-		$this->feeds = array();
+		];
+		$this->feeds = [];
 	}
 
 	/**
@@ -111,6 +130,7 @@ class IcmsFeed {
 		foreach ($this->feeds as $feed) {
 			$tpl->append('items', $feed);
 		}
+        
 		$tpl->display('db:library_rss.html');
 	}
 }

@@ -26,12 +26,14 @@ defined("ICMS_ROOT_PATH") or die("ICMS root path not defined");
 function library_search($queryarray, $andor, $limit, $offset = 0, $userid = 0)
 {
 	global $icmsConfigSearch;
-	
-	$publicationArray = $ret = array();
-	$count = $pubs_left = $number_to_process = '';
+    $publicationArray = [];
+    $ret = [];
+    $count = '';
+    $pubs_left = '';
+    $number_to_process = '';
 	
 	$library_publication_handler = icms_getModuleHandler("publication", 
-			basename(dirname(dirname(__FILE__))), "library");
+			basename(dirname(__FILE__, 2)), "library");
 	$publicationArray = $library_publication_handler->getPublicationsForSearch($queryarray, $andor, 
 			$limit, $offset, $userid);
 		

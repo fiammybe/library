@@ -12,7 +12,7 @@
 
 defined("ICMS_ROOT_PATH") or die("ICMS root path not defined");
 
-$failed_requirements = array();
+$failed_requirements = [];
 
 if (ICMS_VERSION_BUILD < 50) {
 	$failed_requirements[] = _AM_LIBRARY_REQUIREMENTS_ICMS_BUILD;

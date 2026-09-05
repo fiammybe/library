@@ -43,8 +43,8 @@ function icms_module_update_library($module) {
 function icms_module_install_library($module) {
 	
 	// create an uploads directory for images
-	$path = ICMS_ROOT_PATH . '/uploads/' . basename(dirname(dirname(__FILE__)));
-	$directory_exists = $writeable = true;
+	$path = ICMS_ROOT_PATH . '/uploads/' . basename(dirname(__FILE__, 2));
+	$directory_exists = true;
 
 	// check if upload directory exists, make one if not
 	if (!is_dir($path)) {
@@ -66,8 +66,8 @@ function icms_module_install_library($module) {
  */
 
 function library_authorise_mimetypes() {
-	$dirname = basename(dirname(dirname(__FILE__)));
-	$extension_list = array(
+	$dirname = basename(dirname(__FILE__, 2));
+	$extension_list = [
 		'mp3', // sound formats
 		'wav',
 		'wma',
@@ -83,10 +83,10 @@ function library_authorise_mimetypes() {
 		'mpeg',
 		'mpg',
 		'avi'
-	);
+	];
 	$system_mimetype_handler = icms_getModuleHandler('mimetype', 'system');
 	foreach ($extension_list as $extension) {
-		$allowed_modules = array();
+		$allowed_modules = [];
 		$mimetypeObj = '';
 
 		$criteria = new icms_db_criteria_Compo();
