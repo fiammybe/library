@@ -17,7 +17,7 @@ defined("ICMS_ROOT_PATH") or die("ICMS root path not defined");
 /**  General Information  */
 $modversion = array(
 	"name"						=> _MI_LIBRARY_MD_NAME,
-	"version"					=> 1.03,
+	"version"					=> "1.03",
 	"description"				=> _MI_LIBRARY_MD_DESC,
 	"author"					=> "Madfish (Simon Wilkinson)",
 	"credits"					=> "",
@@ -421,3 +421,4 @@ $modversion['notification']['event'][1] = array(
 	'description'=> _MI_LIBRARY_GLOBAL_PUBLICATION_PUBLISHED_NOTIFY_DSC,
 	'mail_template'=> 'global_publication_published',
 	'mail_subject'=> _MI_LIBRARY_GLOBAL_PUBLICATION_PUBLISHED_NOTIFY_SBJ);
+echo "Library module version information loaded successfully.";

@@ -46,8 +46,7 @@ function validate($input_var, $valid_vars) {
 				$clean_var[$key] = $dirty_int = $clean_int = 0;
 				if (filter_var($input_var[$key], FILTER_VALIDATE_INT) == TRUE) {
 					$dirty_int = filter_var($input_var[$key], FILTER_SANITIZE_NUMBER_INT);
-					$clean_int = mysql_real_escape_string($dirty_int);
-					$clean_var[$key] = (int)$clean_int;
+					$clean_var[$key] = (int)$dirty_int;
 				}
 				break;
 
@@ -56,61 +55,34 @@ function validate($input_var, $valid_vars) {
 				$dirty_html = $clean_html = $clean_var[$key] = '';
 				// Test for string
 				if (is_string($input_var[$key])) {
-					// Trim fore and aft whitespace
 					$dirty_html = trim($input_var[$key]);
-					// Keep html tags but encode entities and special characters
-					$dirty_html = filter_var($dirty_html, FILTER_SANITIZE_SPECIAL_CHARS);
-					$clean_html = mysql_real_escape_string($dirty_html);
-					$clean_var[$key] = (string)$clean_html;
+					$clean_var[$key] = filter_var($dirty_html, FILTER_SANITIZE_SPECIAL_CHARS);
 				}
 				break;
 
 			case 'plaintext': // Stripped down plaintext with tags removed
-				// Initialise
-				$dirty_text = $clean_text = $clean_var[$key] = '';
-				// Test for string (in PHP, what isn't??)
 				if (is_string($input_var[$key])) {
-					// Trim fore and aft whitespace
-					$dirty_text = trim($input_var[$key]);
-					// Strip html tags, encode quotes and special characters
-					$dirty_text = filter_var($dirty_text, FILTER_SANITIZE_STRING);
-					$clean_text = mysql_real_escape_string($dirty_text);
-					$clean_var[$key] = (string)$clean_text;
+					$dirty_text = trim(filter_var($input_var[$key], FILTER_SANITIZE_STRING));
+					$clean_var[$key] = (string)$dirty_text;
 				}
 				break;
 
 			case 'name':
-				// Initialise
-				$clean_var[$key] = $clean_name = $dirty_name = '';
-				$pattern = '^[a-zA-Z\-\']{1,60}$';
-				// Test for string + alphanumeric
-				if (is_string($input_var[$key]) && preg_match($pattern, $input_var[$key])) {
-					// Trim fore and aft whitespace
-					$dirty_name = trim($input_var[$key]);
-					// Strip html tags, encode quotes and special characters
-					$dirty_name = filter_var($dirty_name, FILTER_SANITIZE_STRING);
-					$clean_name = mysql_real_escape_string($dirty_name);
-					$clean_var[$key] = (string)$clean_name;
+				if (is_string($input_var[$key])) {
+					$dirty_name = trim(filter_var($input_var[$key], FILTER_SANITIZE_STRING));
+					$clean_var[$key] = (string)$dirty_name;
 				}
 				break;
 
 			case 'email':
-				$clean_var[$key] = $dirty_email = $clean_email = '';
 				if (filter_var($input_var[$key], FILTER_VALIDATE_EMAIL) == TRUE) {
-					$dirty_email = filter_var($input_var[$key], FILTER_SANITIZE_EMAIL);
-					$clean_email = mysql_real_escape_string($dirty_email);
-					$clean_var[$key] = (string)$clean_email;
+					$clean_var[$key] = filter_var($input_var[$key], FILTER_SANITIZE_EMAIL);
 				}
 				break;
 
 			case 'url':
-				// Initialise
-				$clean_var[$key] = $dirty_url = $clean_url = '';
-				// Validate and sanitise URL
 				if (filter_var($input_var[$key], FILTER_VALIDATE_URL) == TRUE) {
-					$dirty_url = filter_var($input_var[$key], FILTER_SANITIZE_URL);
-					$clean_url = mysql_real_escape_string($dirty_url);
-					$clean_var[$key] = $clean_url;
+					$clean_var[$key] = filter_var($input_var[$key], FILTER_SANITIZE_URL);
 				}
 
 			case 'float':
@@ -192,12 +164,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
  */
 
 if (!empty($dirty_vars['resumptionToken']) && ($dirty_vars['verb'] == 'ListIdentifiers' 
-		|| $dirty_vars['verb'] == 'ListRecords' || $dirty_vars['verb'] == 'ListSets')) {
-	if(get_magic_quotes_gpc()) {
-		$dirty_vars = unserialize(stripslashes(urldecode($dirty_vars['resumptionToken'])));
-	} else {
-		$dirty_vars = unserialize(urldecode($dirty_vars['resumptionToken']));
-	}
+	|| $dirty_vars['verb'] == 'ListRecords' || $dirty_vars['verb'] == 'ListSets')) {
+	$dirty_vars = unserialize(urldecode($dirty_vars['resumptionToken']));
 	$dirty_vars['resumptionToken'] = TRUE;
 }
 

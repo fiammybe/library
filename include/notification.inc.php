@@ -22,14 +22,14 @@
  * @return array containing 'name' and 'url' of the related item
  */
 function library_notify_iteminfo($category, $item_id){
-    global $icmsModule, $icmsModuleConfig, $icmsConfig;
+    global $icmsModuleConfig, $icmsConfig;
 
     if ($category == 'global') {
         $item['name'] = '';
         $item['url'] = '';
         return $item;
     }
-	
+
 	if ($category == 'publication') {
 
 		$library_publication_handler = icms_getModuleHandler('publication',

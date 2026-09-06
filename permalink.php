@@ -17,27 +17,26 @@ include_once ICMS_ROOT_PATH . "/header.php";
 $dirty_oai_identifier = isset($_GET["id"]) ? $_GET["id"] : 0 ;
 if ($dirty_oai_identifier)
 {
-	
-	// Sanitise the parameter
-	$dirty_oai_identifier = trim($dirty_oai_identifier);
-	$dirty_oai_identifier = filter_var($dirty_oai_identifier, 
+
+	// Sanitize the parameter
+	$clean_oai_identifier = trim($dirty_oai_identifier);
+	$clean_oai_identifier = filter_var($clean_oai_identifier,
 			FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW);
-	$clean_oai_identifier = mysql_real_escape_string($dirty_oai_identifier);
 
 	// Lookup the id of the requested publication
 	if ($clean_oai_identifier)
 	{
 		$pub_id = $criteria = '';
-		
+
 		$criteria = icms_buildCriteria(array('oai_identifier' => $clean_oai_identifier));
 		$library_publication_handler = icms_getModuleHandler('publication'
 				, basename(dirname(__FILE__)), 'library');
-		$publicationObj = array_shift($library_publication_handler->getObjects($criteria));		
+		$publicationObj = array_shift($library_publication_handler->getObjects($criteria));
 		if ($publicationObj) {
 			header('location: publication.php?publication_id=' . $publicationObj->getVar('publication_id'));
 			exit();
 		}
-	}	
+	}
 }
 
 // If any test or result fails for any reason, can it
