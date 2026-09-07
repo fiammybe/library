@@ -4,6 +4,9 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: write   # <-- VERPLICHT voor release uploads
+
 jobs:
   build:
     runs-on: ubuntu-latest
