@@ -192,6 +192,74 @@ class mod_library_Publication extends icms_ipf_seo_Object
      * @param str $format format that is requested
      * @return mixed value of the field that is requested
      */
+
+    /**
+     * Checks if the current user has permission to edit this publication.
+     * Uses ImpressCMS core icms_userIsAdmin() and icms_getLoggedInUserID().
+     *
+     * @return bool True if user can edit, false otherwise
+     */
+    protected function canEdit()
+    {
+        $module_dirname = $this->handler->getVar('dirname', 'e');
+        if (icms_userIsAdmin($module_dirname)) {
+            return true;
+        }
+
+        $submitter_id = $this->getVar('submitter', 'e');
+        if (empty($submitter_id)) {
+            return false;
+        }
+
+        $current_user_id = icms_getLoggedInUserID();
+        return ($current_user_id > 0 && $current_user_id == $submitter_id);
+    }
+
+    /**
+     * Checks if the current user has permission to delete this publication.
+     * Uses ImpressCMS core icms_userIsAdmin() and icms_getLoggedInUserID().
+     *
+     * @return bool True if user can delete, false otherwise
+     */
+    protected function canDelete()
+    {
+        $module_dirname = $this->handler->getVar('dirname', 'e');
+        if (icms_userIsAdmin($module_dirname)) {
+            return true;
+        }
+
+        $submitter_id = $this->getVar('submitter', 'e');
+        if (empty($submitter_id)) {
+            return false;
+        }
+
+        $current_user_id = icms_getLoggedInUserID();
+        return ($current_user_id > 0 && $current_user_id == $submitter_id);
+    }
+
+    /**
+     * Checks if the current user has permission to change online status.
+     * Uses ImpressCMS core icms_userIsAdmin() and icms_getLoggedInUserID().
+     *
+     * @return bool True if user can change online status, false otherwise
+     */
+    protected function canChangeOnlineStatus()
+    {
+        $module_dirname = $this->handler->getVar('dirname', 'e');
+        if (icms_userIsAdmin($module_dirname)) {
+            return true;
+        }
+
+        $submitter_id = $this->getVar('submitter', 'e');
+        if (empty($submitter_id)) {
+            return false;
+        }
+
+        $current_user_id = icms_getLoggedInUserID();
+        return ($current_user_id > 0 && $current_user_id == $submitter_id);
+    }
+
+
     public function getVar($key, $format = "s")
     {
         if ($format == "s" && in_array($key, [
