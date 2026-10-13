@@ -197,7 +197,7 @@ class mod_library_PublicationHandler extends icms_ipf_Handler
     /**
      * Checks if the current user has permission to edit a publication.
      * Non-admin users can only edit their own submissions.
-     * Uses ImpressCMS core icms_userIsAdmin() and icms_getLoggedInUserID().
+     * Uses ImpressCMS core icms_userIsAdmin() and $icms::$user->uid().
      *
      * @param int $publication_id The publication ID to check
      * @return bool true if user can edit, false otherwise
@@ -220,14 +220,19 @@ class mod_library_PublicationHandler extends icms_ipf_Handler
             return false;
         }
 
-        $current_user_id = icms_getLoggedInUserID();
+        $currentUser = icms::$user;
+        if (!$currentUser) {
+            return false;
+        }
+
+        $current_user_id = $currentUser->uid();
         return ($current_user_id > 0 && $current_user_id == $submitter_id);
     }
 
     /**
      * Checks if the current user has permission to delete a publication.
      * Non-admin users can only delete their own submissions.
-     * Uses ImpressCMS core icms_userIsAdmin() and icms_getLoggedInUserID().
+     * Uses ImpressCMS core icms_userIsAdmin() and $icms::$user->uid().
      *
      * @param int $publication_id The publication ID to check
      * @return bool true if user can delete, false otherwise
@@ -250,7 +255,12 @@ class mod_library_PublicationHandler extends icms_ipf_Handler
             return false;
         }
 
-        $current_user_id = icms_getLoggedInUserID();
+        $currentUser = icms::$user;
+        if (!$currentUser) {
+            return false;
+        }
+
+        $current_user_id = $currentUser->uid();
         return ($current_user_id > 0 && $current_user_id == $submitter_id);
     }
 
