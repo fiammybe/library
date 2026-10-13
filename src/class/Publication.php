@@ -192,6 +192,95 @@ class mod_library_Publication extends icms_ipf_seo_Object
      * @param str $format format that is requested
      * @return mixed value of the field that is requested
      */
+
+    /**
+     * Checks if the current user has permission to edit this publication.
+     * Non-admin users can only edit their own submissions.
+     * Uses ImpressCMS core icms_userIsAdmin() and $icms::$user->uid().
+     *
+     * @return bool True if user can edit, false otherwise
+     */
+    protected function canEdit()
+    {
+        // Admins always have permission to edit any publication in the module
+        if ($this->isAdminOwnerCheck('library')) {
+            return true;
+        }
+
+        // Non-admins can only edit their own submissions
+        $submitter_id = $this->getVar('submitter', 'e');
+        if (empty($submitter_id)) {
+            return false;
+        }
+
+        $currentUser = icms::$user;
+        if (!$currentUser) {
+            return false;
+        }
+
+        $current_user_id = $currentUser->uid();
+        return ($current_user_id > 0 && $current_user_id == $submitter_id);
+    }
+
+    /**
+     * Checks if the current user has permission to delete this publication.
+     * Non-admin users can only delete their own submissions.
+     * Uses ImpressCMS core icms_userIsAdmin() and $icms::$user->uid().
+     *
+     * @return bool True if user can delete, false otherwise
+     */
+    protected function canDelete()
+    {
+        // Admins always have permission to delete any publication in the module
+        if ($this->isAdminOwnerCheck('library')) {
+            return true;
+        }
+
+        // Non-admins can only delete their own submissions
+        $submitter_id = $this->getVar('submitter', 'e');
+        if (empty($submitter_id)) {
+            return false;
+        }
+
+        $currentUser = icms::$user;
+        if (!$currentUser) {
+            return false;
+        }
+
+        $current_user_id = $currentUser->uid();
+        return ($current_user_id > 0 && $current_user_id == $submitter_id);
+    }
+
+    /**
+     * Checks if the current user has permission to change online status.
+     * Non-admin users can only change the status of their own submissions.
+     * Uses ImpressCMS core icms_userIsAdmin() and $icms::$user->uid().
+     *
+     * @return bool True if user can change online status, false otherwise
+     */
+    protected function canChangeOnlineStatus()
+    {
+        // Admins always have permission to change online status of any publication
+        if ($this->isAdminOwnerCheck('library')) {
+            return true;
+        }
+
+        // Non-admins can only change the status of their own submissions
+        $submitter_id = $this->getVar('submitter', 'e');
+        if (empty($submitter_id)) {
+            return false;
+        }
+
+        $currentUser = icms::$user;
+        if (!$currentUser) {
+            return false;
+        }
+
+        $current_user_id = $currentUser->uid();
+        return ($current_user_id > 0 && $current_user_id == $submitter_id);
+    }
+
+
     public function getVar($key, $format = "s")
     {
         if ($format == "s" && in_array($key, [

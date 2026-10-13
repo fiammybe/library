@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Classes responsible for managing Library publication objects
  *
@@ -181,6 +181,90 @@ class mod_library_PublicationHandler extends icms_ipf_Handler
      *
      * @return array mixed
      */
+
+    /**
+     * Checks if the current user is an admin in this module.
+     * Uses ImpressCMS core icms_userIsAdmin().
+     *
+     * @param string $dirname module directory name (e.g., 'library')
+     * @return bool true if current user is an admin of this module, false otherwise
+     */
+    protected function isAdminOwnerCheck($dirname)
+    {
+        return icms_userIsAdmin($dirname);
+    }
+
+    /**
+     * Checks if the current user has permission to edit a publication.
+     * Non-admin users can only edit their own submissions.
+     * Uses ImpressCMS core icms_userIsAdmin() and $icms::$user->uid().
+     *
+     * @param int $publication_id The publication ID to check
+     * @return bool true if user can edit, false otherwise
+     */
+    protected function _checkEditPermission($publication_id)
+    {
+        // Admins always have permission to edit any publication in the module
+        if ($this->isAdminOwnerCheck('library')) {
+            return true;
+        }
+
+        // Non-admins can only edit their own submissions
+        $publication_obj = $this->get($publication_id);
+        if (!$publication_obj) {
+            return false;
+        }
+
+        $submitter_id = $publication_obj->getVar('submitter', 'e');
+        if (empty($submitter_id)) {
+            return false;
+        }
+
+        $currentUser = icms::$user;
+        if (!$currentUser) {
+            return false;
+        }
+
+        $current_user_id = $currentUser->uid();
+        return ($current_user_id > 0 && $current_user_id == $submitter_id);
+    }
+
+    /**
+     * Checks if the current user has permission to delete a publication.
+     * Non-admin users can only delete their own submissions.
+     * Uses ImpressCMS core icms_userIsAdmin() and $icms::$user->uid().
+     *
+     * @param int $publication_id The publication ID to check
+     * @return bool true if user can delete, false otherwise
+     */
+    protected function _checkDeletePermission($publication_id)
+    {
+        // Admins always have permission to delete any publication in the module
+        if ($this->isAdminOwnerCheck('library')) {
+            return true;
+        }
+
+        // Non-admins can only delete their own submissions
+        $publication_obj = $this->get($publication_id);
+        if (!$publication_obj) {
+            return false;
+        }
+
+        $submitter_id = $publication_obj->getVar('submitter', 'e');
+        if (empty($submitter_id)) {
+            return false;
+        }
+
+        $currentUser = icms::$user;
+        if (!$currentUser) {
+            return false;
+        }
+
+        $current_user_id = $currentUser->uid();
+        return ($current_user_id > 0 && $current_user_id == $submitter_id);
+    }
+
+
     public function getFormatOptions()
     {
         $mimetypeObjArray = [];
