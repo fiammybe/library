@@ -10,16 +10,6 @@
  * @version        $Id$
  */
 
-namespace src\class;
-
-use icms;
-use icms_db_criteria_Compo;
-use icms_db_criteria_Item;
-use icms_db_legacy_Database;
-use icms_ipf_Handler;
-use str;
-use type;
-
 defined("ICMS_ROOT_PATH") or die("ICMS root path not defined");
 
 class mod_library_PublicationHandler extends icms_ipf_Handler

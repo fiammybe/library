@@ -13,6 +13,6 @@ return RectorConfig::configure()
         __DIR__ . '/include',
     ])
     //->withPreparedSets(deadCode: true,codingStyle: true,)
-    ->withPhpSets(php83: true)
+    ->withPhpSets(php82: true)
     //->withRules(['RenameIcmsModuleRector'])
     ;

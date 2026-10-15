@@ -91,7 +91,8 @@ function library_authorise_mimetypes() {
 
 		$criteria = new icms_db_criteria_Compo();
 		$criteria->add(new icms_db_criteria_Item('extension', $extension));
-		$mimetypeObj = array_shift($system_mimetype_handler->getObjects($criteria));
+		$mimetypeObjects = $system_mimetype_handler->getObjects($criteria);
+		$mimetypeObj = array_shift($mimetypeObjects);
 
 		if ($mimetypeObj) {
 			$allowed_modules = $mimetypeObj->getVar('dirname');

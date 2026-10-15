@@ -41,3 +41,15 @@ Version 1.04 (unreleased)
 - Change image control to imageupload.
 - Remove deprecated pass-by-reference calls.
 - Add support for untagged publications on index page and block.
+
+
+PHP 8.2 / ImpressCMS 2.0.3 compatibility
+----------------------------------------
+- Remove the accidental namespace (src\class) and bogus use statements added by Rector in the class files;
+  ImpressCMS loads mod_library_* classes from the global namespace.
+- Replace the deprecated FILTER_SANITIZE_STRING filter (permalink.php, oaipmh_target.php).
+- Avoid passing function results by reference to array_shift().
+- Guard against null/empty values passed to date() and strstr().
+- Do not allow object instantiation when unserializing the OAI-PMH resumption token.
+- Add PHP (>= 8.2) and ImpressCMS (>= 2.0.3) requirement checks in the admin.
+- Declare the PHP requirement in composer.json, drop the unused autoload section, add a PHP lint workflow.

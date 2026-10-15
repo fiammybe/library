@@ -31,15 +31,12 @@ jobs:
           VERSION="${TAG#v}"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Install Composer dependencies (no dev)
-        run: composer install --no-dev --optimize-autoloader
-
       - name: Prepare build directory
         run: |
           rm -rf build
           mkdir -p build/$MODULE_NAME
           cp -R src/* build/$MODULE_NAME/
-          cp -R vendor build/$MODULE_NAME/vendor
+          rm -f build/$MODULE_NAME/rector.php
           echo "${VERSION}" > build/$MODULE_NAME/VERSION
 
       - name: Create ZIP package

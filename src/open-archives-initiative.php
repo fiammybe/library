@@ -27,7 +27,8 @@ if (icms_get_module_status("sprockets"))
 
 	$sprockets_archive_handler = icms_getModuleHandler('archive', 'sprockets', 'sprockets');
 	$criteria = icms_buildCriteria(array('module_id' => icms::$module->getVar('mid')));
-	$archiveObj = array_shift($sprockets_archive_handler->getObjects($criteria));
+	$archiveObjects = $sprockets_archive_handler->getObjects($criteria);
+	$archiveObj = array_shift($archiveObjects);
 	if ($archiveObj)
 	{
 		$archive = $archiveObj->toArray();

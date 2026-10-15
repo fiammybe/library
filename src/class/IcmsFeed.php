@@ -11,11 +11,6 @@
  * @version        $Id: icmsfeed.php Madfish 19/11/2010 $
  */
 
-namespace src\class;
-
-use icms;
-use icms_view_Tpl;
-
 if (!defined('ICMS_ROOT_PATH')) {
     exit();
 }

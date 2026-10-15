@@ -12,8 +12,6 @@
 
 /** Include the module's header for all pages */
 
-use src\class\IcmsFeed;
-
 include_once 'header.php';
 include_once ICMS_ROOT_PATH.'/header.php';
 

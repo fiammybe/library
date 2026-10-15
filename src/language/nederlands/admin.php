@@ -15,7 +15,8 @@ defined("ICMS_ROOT_PATH") or die("ICMS root pad niet gedefinieerd");
 // Requirements
 define("_AM_LIBRARY_REQUIREMENTS", "Library Vereisten");
 define("_AM_LIBRARY_REQUIREMENTS_INFO", "We hebben uw systeem beoordeeld, helaas voldoet het niet aan alle vereisten die nodig zijn voor Library om te functioneren. Hieronder staan de vereisten die nodig zijn.");
-define("_AM_LIBRARY_REQUIREMENTS_ICMS_BUILD", "Library vereist minimaal ImpressCMS 1.3.");
+define("_AM_LIBRARY_REQUIREMENTS_PHP_VERSION", "Library vereist minimaal PHP 8.2.");
+define("_AM_LIBRARY_REQUIREMENTS_ICMS_BUILD", "Library vereist minimaal ImpressCMS 2.0.3.");
 define("_AM_LIBRARY_REQUIREMENTS_SUPPORT", "Als u vragen of opmerkingen heeft, bezoek dan onze forums op <a href='http://community.impresscms.org'>http://community.impresscms.org</a>.");
 
 // Publication

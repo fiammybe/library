@@ -20,8 +20,8 @@ if ($dirty_oai_identifier)
 
 	// Sanitize the parameter
 	$clean_oai_identifier = trim($dirty_oai_identifier);
-	$clean_oai_identifier = filter_var($clean_oai_identifier,
-			FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW);
+	// FILTER_SANITIZE_STRING is deprecated since PHP 8.1: strip tags and low ASCII characters instead
+	$clean_oai_identifier = preg_replace('/[\x00-\x1F]/', '', strip_tags($clean_oai_identifier));
 
 	// Lookup the id of the requested publication
 	if ($clean_oai_identifier)
@@ -31,7 +31,8 @@ if ($dirty_oai_identifier)
 		$criteria = icms_buildCriteria(array('oai_identifier' => $clean_oai_identifier));
 		$library_publication_handler = icms_getModuleHandler('publication'
 				, basename(dirname(__FILE__)), 'library');
-		$publicationObj = array_shift($library_publication_handler->getObjects($criteria));
+		$publicationObjects = $library_publication_handler->getObjects($criteria);
+		$publicationObj = array_shift($publicationObjects);
 		if ($publicationObj) {
 			header('location: publication.php?publication_id=' . $publicationObj->getVar('publication_id'));
 			exit();

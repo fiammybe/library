@@ -3,13 +3,13 @@
     "description": "ImpressCMS Library module - modernized for PHP 8.2",
     "type": "impresscms-module",
     "version": "1.0.79",
+    "require": {
+        "php": ">=8.2"
+    },
     "require-dev": {
         "rector/rector": "^2.6"
     },
-    "autoload": {
-        "psr-4": {
-            "mod_library\\": "class/",
-            "Config\\": "config/"
-        }
+    "scripts": {
+        "lint": "find src -name '*.php' -print0 | xargs -0 -n1 php -l"
     }
 }

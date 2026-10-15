@@ -15,7 +15,8 @@ defined("ICMS_ROOT_PATH") or die("ICMS root path not defined");
 // Requirements
 define("_AM_LIBRARY_REQUIREMENTS", "Library Requirements");
 define("_AM_LIBRARY_REQUIREMENTS_INFO", "We've reviewed your system, unfortunately it doesn't meet all the requirements needed for Library to function. Below are the requirements needed.");
-define("_AM_LIBRARY_REQUIREMENTS_ICMS_BUILD", "Library requires at least ImpressCMS 1.3.");
+define("_AM_LIBRARY_REQUIREMENTS_PHP_VERSION", "Library requires at least PHP 8.2.");
+define("_AM_LIBRARY_REQUIREMENTS_ICMS_BUILD", "Library requires at least ImpressCMS 2.0.3.");
 define("_AM_LIBRARY_REQUIREMENTS_SUPPORT", "Should you have any question or concerns, please visit our forums at <a href='http://community.impresscms.org'>http://community.impresscms.org</a>.");
 
 // Publication

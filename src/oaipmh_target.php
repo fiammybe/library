@@ -21,6 +21,18 @@
  */
 
 /**
+ * Replacement for the deprecated FILTER_SANITIZE_STRING filter (PHP 8.1+)
+ *
+ * Strips tags and encodes quotes, like the old filter did.
+ *
+ * @param string $value
+ * @return string
+ */
+function library_sanitize_string($value) {
+	return str_replace(array("'", '"'), array('&#39;', '&#34;'), strip_tags((string)$value));
+}
+
+/**
  * Basic validation and sanitation of user input but NOT range checking (calling method should do)
  *
  * This can be expanded for all different types of input: email, URL, filenames, media/mimetypes
@@ -62,14 +74,14 @@ function validate($input_var, $valid_vars) {
 
 			case 'plaintext': // Stripped down plaintext with tags removed
 				if (is_string($input_var[$key])) {
-					$dirty_text = trim(filter_var($input_var[$key], FILTER_SANITIZE_STRING));
+					$dirty_text = trim(library_sanitize_string($input_var[$key]));
 					$clean_var[$key] = (string)$dirty_text;
 				}
 				break;
 
 			case 'name':
 				if (is_string($input_var[$key])) {
-					$dirty_name = trim(filter_var($input_var[$key], FILTER_SANITIZE_STRING));
+					$dirty_name = trim(library_sanitize_string($input_var[$key]));
 					$clean_var[$key] = (string)$dirty_name;
 				}
 				break;
@@ -165,7 +177,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 if (!empty($dirty_vars['resumptionToken']) && ($dirty_vars['verb'] == 'ListIdentifiers' 
 	|| $dirty_vars['verb'] == 'ListRecords' || $dirty_vars['verb'] == 'ListSets')) {
-	$dirty_vars = unserialize(urldecode($dirty_vars['resumptionToken']));
+	// Never allow object instantiation from user supplied data
+	$dirty_vars = unserialize(urldecode($dirty_vars['resumptionToken']), ['allowed_classes' => false]);
+	if (!is_array($dirty_vars)) {
+		$dirty_vars = [];
+	}
 	$dirty_vars['resumptionToken'] = TRUE;
 }
 

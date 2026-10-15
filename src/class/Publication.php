@@ -10,15 +10,6 @@
  * @version        $Id$
  */
 
-namespace src\class;
-
-use icms;
-use icms_ipf_Controller;
-use icms_ipf_object;
-use icms_ipf_seo_Object;
-use icms_member_user_Handler;
-use str;
-
 defined("ICMS_ROOT_PATH") or die("ICMS root path not defined");
 
 class mod_library_Publication extends icms_ipf_seo_Object
@@ -235,7 +226,7 @@ class mod_library_Publication extends icms_ipf_seo_Object
     {
         $date = $this->getVar('date', 'e');
         if ($date) {
-            $date = date(icms_getConfig('date_format', 'library'), $date);
+            $date = date(icms_getConfig('date_format', 'library'), (int)$date);
         }
 
         return $date;
@@ -430,7 +421,7 @@ class mod_library_Publication extends icms_ipf_seo_Object
     public function submission_time()
     {
         $submission_time = $this->getVar('submission_time', 'e');
-        return date(icms_getConfig('date_format', 'library'), $submission_time);
+        return date(icms_getConfig('date_format', 'library'), (int)$submission_time);
     }
 
     /**
