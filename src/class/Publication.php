@@ -635,11 +635,19 @@ class mod_library_Publication extends icms_ipf_seo_Object
 
     /**
      * View publication within admin page
+     *
+     * @param bool $onlyUrl Return only the URL instead of a full link (as per icms_ipf_Object)
+     * @return string
      */
-    public function getAdminViewItemLink()
+    public function getAdminViewItemLink($onlyUrl = false)
     {
-        return '<a href="' . LIBRARY_ADMIN_URL . 'publication.php?op=view&amp;publication_id='
-            . $this->getVar('publication_id', 'e') . '" title="' . _CO_LIBRARY_PUBLICATION_VIEW
+        $url = LIBRARY_ADMIN_URL . 'publication.php?op=view&amp;publication_id='
+            . $this->getVar('publication_id', 'e');
+        if ($onlyUrl) {
+            return $url;
+        }
+
+        return '<a href="' . $url . '" title="' . _CO_LIBRARY_PUBLICATION_VIEW
             . '">' . $this->getVar('title') . '</a>';
     }
 
